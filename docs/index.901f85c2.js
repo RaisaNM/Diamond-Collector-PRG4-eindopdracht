@@ -516,6 +516,7 @@ function hmrAcceptRun(bundle, id) {
 },{}],"edeGs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+//creating the game canvas
 parcelHelpers.export(exports, "Game", ()=>Game
 );
 var _pixiJs = require("pixi.js");
@@ -523,15 +524,10 @@ var _ghostPng = require("./images/ghost.png");
 var _ghostPngDefault = parcelHelpers.interopDefault(_ghostPng);
 var _diamondPng = require("./images/diamond.png");
 var _diamondPngDefault = parcelHelpers.interopDefault(_diamondPng);
-var _rubyPng = require("./images/ruby.png");
-var _rubyPngDefault = parcelHelpers.interopDefault(_rubyPng);
-var _ghost = require("./ghost");
 var _diamond = require("./diamond");
-var _ruby = require("./ruby");
 class Game {
     diamonds = [];
-    rubies = [];
-    ghost = [];
+    //Making a pixi-canvas
     constructor(){
         console.log("game created");
         this.pixi = new _pixiJs.Application({
@@ -539,9 +535,9 @@ class Game {
             height: 450
         });
         document.body.appendChild(this.pixi.view);
-        //Object
+        // // STAP 2 - preload alle afbeeldingen
         this.loader = new _pixiJs.Loader();
-        this.loader.add('ghostTexture', _ghostPngDefault.default).add('diamondTexture', _diamondPngDefault.default).add('rubyTexture', _rubyPngDefault.default);
+        this.loader.add('ghostTexture', _ghostPngDefault.default).add('diamondTexture', _diamondPngDefault.default);
         this.loader.load(()=>this.doneLoading()
         );
     }
@@ -549,48 +545,23 @@ class Game {
     //Done loading the canvas it loads the textures and classes.
     doneLoading() {
         console.log("all textures loaded!");
-        //add Ghost
-        for(let i = 0; i < 1; i++){
-            let ghost = new _ghost.Ghost(this.loader.resources['ghostTexture'].texture, this);
-            this.ghost.push(ghost);
-            this.pixi.stage.addChild(ghost);
-        }
         //add diamonds
-        for(let i1 = 0; i1 < 35; i1++){
+        for(let i = 0; i < 35; i++){
             let diamond = new _diamond.Diamond(this.loader.resources['diamondTexture'].texture, this);
             this.diamonds.push(diamond);
             this.pixi.stage.addChild(diamond);
         }
-        //add rubies
-        for(let i2 = 0; i2 < 20; i2++){
-            let ruby = new _ruby.Ruby(this.loader.resources['rubyTexture'].texture, this);
-            this.rubies.push(ruby);
-            this.pixi.stage.addChild(ruby);
-        }
         this.pixi.ticker.add((delta)=>this.update(delta)
         );
-    }
-    //collision: If the ruby hits the ghost, the player dies.
-    collision(rubies, ghost) {
-        const bounds1 = rubies.getBounds();
-        const bounds2 = ghost.getBounds();
-        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
     }
     //updates the classes
     update(delta) {
         for (const diamond of this.diamonds)diamond.update(delta);
-        for (const ruby of this.rubies)ruby.update(delta);
-        for (const ghost of this.ghost)ghost.update();
-    //Collision with rubies and ghost but doesnt work. 
-    //
-    // if(this.collision(this.diamond, this.ghost)){
-    //     console.log("player touches enemy 💀")
-    // }
     }
 }
 new Game();
 
-},{"pixi.js":"dsYej","./images/ghost.png":"6z1vT","./images/diamond.png":"f479L","./images/ruby.png":"e3w3P","./diamond":"doRq4","./ruby":"5Mz22","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./ghost":"hhp7d"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./images/ghost.png":"6z1vT","./images/diamond.png":"f479L","./diamond":"doRq4","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37127,9 +37098,6 @@ exports.getOrigin = getOrigin;
 },{}],"f479L":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "diamond.7544d873.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"e3w3P":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "ruby.9f74216d.png" + "?" + Date.now();
-
 },{"./helpers/bundle-url":"lgJ39"}],"doRq4":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -37145,114 +37113,20 @@ class Diamond extends _pixiJs.Sprite {
         this.x = Math.random() * game.pixi.screen.right;
         this.y = Math.random() * game.pixi.screen.bottom;
         this.scale.set(-1, 1);
+        this.interactive = true;
+        this.on('pointerdown', ()=>this.onClick()
+        );
+    }
+    //Behaviour: Everytime you click on a diamond, you collect them.
+    onClick() {
+        console.log("Click");
+        this.game.pixi.stage.removeChild(this);
     }
     //Behaviour: updates the movement of the diamonds
     update(delta) {
         this.x += this.speed * delta;
         this.x += Math.sin(this.y * 0.02) * 2;
         this.y += Math.sin(this.x * 0.02) * 2;
-    }
-}
-
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5Mz22":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-//Ruby's has to damage the player
-parcelHelpers.export(exports, "Ruby", ()=>Ruby
-);
-var _pixiJs = require("pixi.js");
-class Ruby extends _pixiJs.Sprite {
-    speed = 0;
-    //OBJECT
-    constructor(texture, game){
-        super(texture);
-        this.game = game;
-        this.x = Math.random() * game.pixi.screen.right;
-        this.y = Math.random() * game.pixi.screen.bottom;
-        this.scale.set(-1, 1);
-    }
-    //Behaviour
-    update(delta) {
-        this.x += this.speed * delta;
-        this.x += Math.sin(this.y * 0.02) * 5;
-        this.y += Math.sin(this.x * 0.02) * 8;
-    }
-}
-
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hhp7d":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-//Ghost class, the player
-parcelHelpers.export(exports, "Ghost", ()=>Ghost
-);
-var _pixiJs = require("pixi.js");
-class Ghost extends _pixiJs.Sprite {
-    //Speed
-    speed = 0;
-    xspeed = 0;
-    yspeed = 0;
-    //Object
-    constructor(texture, game){
-        super(texture);
-        this.game = game;
-        //starts randomly in the screen
-        this.x = Math.random() * game.pixi.screen.right;
-        this.y = Math.random() * game.pixi.screen.bottom;
-        this.scale.set(-1, 1);
-        //Keyboard
-        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
-        );
-        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
-        );
-    }
-    //Behaviour: Walking (If you click on the up/W, down/S, left/A or right/D buttons, the player moves)
-    onKeyDown(e) {
-        switch(e.key.toUpperCase()){
-            case "A":
-            case "ARROWLEFT":
-                this.xspeed = -5;
-                break;
-            case "D":
-            case "ARROWRIGHT":
-                this.xspeed = 5;
-                break;
-            case "W":
-            case "ARROWUP":
-                this.yspeed = -5;
-                break;
-            case "S":
-            case "ARROWDOWN":
-                this.yspeed = 5;
-                break;
-        }
-    }
-    onKeyUp(e) {
-        switch(e.key.toUpperCase()){
-            case " ":
-                break;
-            case "A":
-            case "D":
-            case "ARROWLEFT":
-            case "ARROWRIGHT":
-                this.xspeed = 0;
-                break;
-            case "W":
-            case "S":
-            case "ARROWUP":
-            case "ARROWDOWN":
-                this.yspeed = 0;
-                break;
-        }
-    }
-    //Speed
-    update() {
-        this.x += this.xspeed;
-        this.y += this.yspeed;
-        this.keepInScreen();
-    }
-    //Ghost stays on the screen even if the player goes out of screen.
-    keepInScreen() {
-        if (this.getBounds().left > this.game.pixi.screen.right) this.x = -this.getBounds().width;
     }
 }
 

@@ -1,4 +1,3 @@
-<h1>"DIAMOND COLLECTOR VER 3 (MAIN GAME)"</h1>
+<h1>"DIAMOND COLLECTOR VER 1"</h1>
 <p>door Raisa Mahesvara Niadilova</p>
-<h2>Derde prototype is een combinatie van prototype 1 en 2.</h2> 
-<h3>In proto 3 zijn er diamonds die je moet verzamelen, maar ook diamonds die je moet ontwijken omdat ze shade geven als je tegen aan komt, Hierbij hebt ik geleerd over collision function. Hoewel, de collission werkt niet echt helemaal jammer genoeg, maar ik zie hier nut in. Ik wil dat de speler ook objecten ontwijken om de game harder te maken.</h3>
+<h3>In versie 1 van Diamond Collector kan je op de diamonds klikken om de objecten op te rapen en te verzamelen. Hierbij heb ik geleerd om de diamonds te laten kunnen bewegen door de "math" functie en ook clickable te maken in de game met de muis en pointer. Ik werkt niet in een team vanwege dat ik een herkanser ben, maar deze mechanics die ik heb geleerd kan gebruikt worden in mijn game sinds ik de diamonds weg wil laten halen elke keer als iemand een diamond verzamelt.</h3>
