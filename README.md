@@ -1,3 +1,3 @@
-<h1>"DIAMOND COLLECTOR VER 1"</h1>
+<h1>"DIAMOND COLLECTOR VER 2"</h1>
 <p>door Raisa Mahesvara Niadilova</p>
-<h3>In versie 1 van Diamond Collector kan je op de diamonds klikken om de objecten op te rapen en te verzamelen. Hierbij heb ik geleerd om de diamonds te laten kunnen bewegen door de "math" functie en ook clickable te maken in de game met de muis en pointer. Ik werkt niet in een team vanwege dat ik een herkanser ben, maar deze mechanics die ik heb geleerd kan gebruikt worden in mijn game sinds ik de diamonds weg wil laten halen elke keer als iemand een diamond verzamelt.</h3>
+<h3> In versie 2 speel je als de ghost om diamonds op te halen. In plaats can clickable gebruik je de ghost om diamonds op te halen. Hierbij heb ik geleerd om de keyboard te verbinden met de game. Ik maak gebruik van onkey en downkey events om de ghost te laten bewegen. Ik heb hieraan veel nut vanwege dat ik graag de ghost wil hebben als de player en ook later een tweede player. </h3>
