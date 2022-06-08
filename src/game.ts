@@ -9,17 +9,23 @@ import {Ruby} from './ruby'
 
 export class Game {
     //Making a pixi-canvas
-    pixi: PIXI.Application
-    diamonds: Diamond[] = [];
-    rubies: Ruby[] = [];
-    ghost: Ghost[] = [];
-    background: PIXI.Sprite
-    loader
+    private _pixi: PIXI.Application
+    public diamonds: Diamond[] = [];
+    public rubies: Ruby[] = [];
+    public ghost: Ghost
+    public background: PIXI.Sprite
+    private loader
 
-    constructor(){
+    public get pixi(): PIXI.Application {
+        return this._pixi
+      }
+    
+      constructor(pixi: PIXI.Application){
         console.log("game created")
-        this.pixi = new PIXI.Application({ width: 800, height: 450 })
-        document.body.appendChild(this.pixi.view)
+        
+        this._pixi = pixi
+        // this.pixi = new PIXI.Application({ width: 800, height: 450 })
+        // document.body.appendChild(this.pixi.view)
 
         //Object
         this.loader = new PIXI.Loader()
@@ -31,7 +37,6 @@ export class Game {
         this.loader.load(() => this.doneLoading())
     }
 
-    
     //BEHAVOUR 
 
     //Done loading the canvas it loads the textures and classes.
@@ -39,11 +44,9 @@ export class Game {
         console.log("all textures loaded!")
 
         //add Ghost
-        for(let i = 0; i<1; i++){
-            let ghost = new Ghost(this.loader.resources['ghostTexture'].texture!, this)
-            this.ghost.push(ghost)
-            this.pixi.stage.addChild(ghost)
-        }
+        this.ghost = new Ghost(  this.loader.resources["ghostTexture"].texture!, this);
+        this.pixi.stage.addChild(this.ghost);
+        
 
         //add diamonds
         for(let i = 0; i<35; i++){
@@ -53,7 +56,7 @@ export class Game {
         }
 
         //add rubies
-        for(let i = 0; i<20; i++){
+        for(let i = 0; i<5; i++){
             let ruby = new Ruby(this.loader.resources['rubyTexture'].texture!, this)
             this.rubies.push(ruby)
             this.pixi.stage.addChild(ruby)
@@ -63,8 +66,8 @@ export class Game {
     }
 
     //collision: If the ruby hits the ghost, the player dies.
-    collision(rubies:Ruby, ghost: Ghost) {
-        const bounds1 = rubies.getBounds()
+    collision(diamonds: Diamond, ghost: Ghost) {
+        const bounds1 = diamonds.getBounds()
         const bounds2 = ghost.getBounds()
 
         return bounds1.x < bounds2.x + bounds2.width
@@ -73,26 +76,36 @@ export class Game {
             && bounds1.y + bounds1.height > bounds2.y;
     }
 
+    collision1(rubies: Ruby, ghost: Ghost) {
+        const bounds1 = rubies.getBounds()
+        const bounds2 = ghost.getBounds()
+
+        return bounds1.x < bounds2.x + bounds2.width
+            && bounds1.x + bounds1.width > bounds2.x
+            && bounds1.y < bounds2.y + bounds2.height
+            && bounds1.y + bounds1.height > bounds2.y;
+    }
+    
+
     //updates the classes
     update(delta: number){
-        for(const diamond of this.diamonds){
-            diamond.update(delta)
-        }
-
+        this.ghost.update();
+        //Game still works despite the errors
         for(const ruby of this.rubies){
             ruby.update(delta)
+            if (this.collision(this.ghost, ruby)) {
+
+                this.pixi.stage.removeChild(ghost);
+              }
         }
 
-        for(const ghost of this.ghost){
-            ghost.update()
+        //Ghost collects diamonds
+        for(const diamond of this.diamonds){
+            diamond.update(delta)
+            if (this.collision(this.ghost, diamond)) {
+                this.pixi.stage.removeChild(diamond);
+              }
         }
-
-        //Collision with rubies and ghost but doesnt work. 
-        //
-
-        // if(this.collision(this.diamond, this.ghost)){
-        //     console.log("player touches enemy 💀")
-        // }
     }
 }
-new Game()
+

@@ -19,7 +19,7 @@ export class Ruby extends PIXI.Sprite {
     //Behaviour
     update(delta: number) {
         this.x += this.speed*delta
-        this.x += Math.sin(this.y * 0.02) * 5
-        this.y += Math.sin(this.x * 0.02) * 8
+        this.x += Math.sin(this.y * 0.02) * 3
+        this.y += Math.sin(this.x * 0.02) * 2
     }
 }
