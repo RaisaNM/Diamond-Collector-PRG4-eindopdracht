@@ -142,13 +142,13 @@
       this[globalName] = mainExports;
     }
   }
-})({"fpRtI":[function(require,module,exports) {
+})({"cGvIw":[function(require,module,exports) {
 "use strict";
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "a7523702901f85c2";
+module.bundle.HMR_BUNDLE_ID = "638f34211b34d9e1";
 function _toConsumableArray(arr) {
     return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -513,85 +513,43 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"edeGs":[function(require,module,exports) {
+},{}],"cS4Fe":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Game", ()=>Game
-) // new Game()
-;
+parcelHelpers.export(exports, "Startmenu", ()=>Startmenu
+);
 var _pixiJs = require("pixi.js");
-var _ghostPng = require("./images/ghost.png");
-var _ghostPngDefault = parcelHelpers.interopDefault(_ghostPng);
-var _diamondPng = require("./images/diamond.png");
-var _diamondPngDefault = parcelHelpers.interopDefault(_diamondPng);
-var _rubyPng = require("./images/ruby.png");
-var _rubyPngDefault = parcelHelpers.interopDefault(_rubyPng);
-var _ghost = require("./ghost");
-var _diamond = require("./diamond");
-var _ruby = require("./ruby");
-class Game {
-    diamonds = [];
-    rubies = [];
+var _button = require("./button");
+var _game = require("./game");
+class Startmenu {
     constructor(){
-        console.log("game created");
-        // this.pixi = new PIXI.Application({ width: 800, height: 450 })
-        // document.body.appendChild(this.pixi.view)
-        //Object
-        this.loader = new _pixiJs.Loader();
-        this.loader.add('ghostTexture', _ghostPngDefault.default).add('diamondTexture', _diamondPngDefault.default).add('rubyTexture', _rubyPngDefault.default);
-        this.loader.load(()=>this.doneLoading()
+        console.log("start menu");
+        this.pixi = new _pixiJs.Application({
+            width: 800,
+            height: 450
+        });
+        document.body.appendChild(this.pixi.view);
+        this.titleText = new _pixiJs.Text("DIAMOND COLLECTOR", {
+            fontFamily: 'Arial',
+            fontSize: 50,
+            fill: 16777215,
+            align: "left"
+        });
+        this.pixi.stage.addChild(this.titleText);
+        this.button = new _button.Button(this.pixi.screen.width / 2, this.pixi.screen.height / 2);
+        this.pixi.stage.addChild(this.button);
+        this.button.on("pointerdown", ()=>this.onClick()
         );
     }
-    //BEHAVOUR 
-    //Done loading the canvas it loads the textures and classes.
-    doneLoading() {
-        console.log("all textures loaded!");
-        //add Ghost
-        this.ghost = new _ghost.Ghost(this.loader.resources["ghostTexture"].texture, this);
-        this.pixi.stage.addChild(this.ghost);
-        //add diamonds
-        for(let i = 0; i < 35; i++){
-            let diamond = new _diamond.Diamond(this.loader.resources['diamondTexture'].texture, this);
-            this.diamonds.push(diamond);
-            this.pixi.stage.addChild(diamond);
-        }
-        //add rubies
-        for(let i1 = 0; i1 < 5; i1++){
-            let ruby = new _ruby.Ruby(this.loader.resources['rubyTexture'].texture, this);
-            this.rubies.push(ruby);
-            this.pixi.stage.addChild(ruby);
-        }
-        this.pixi.ticker.add((delta)=>this.update(delta)
-        );
-    }
-    //collision: If the ruby hits the ghost, the player dies.
-    collision(diamonds, ghost) {
-        const bounds1 = diamonds.getBounds();
-        const bounds2 = ghost.getBounds();
-        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
-    }
-    collision1(rubies, ghost) {
-        const bounds1 = rubies.getBounds();
-        const bounds2 = ghost.getBounds();
-        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
-    }
-    //updates the classes
-    update(delta) {
-        this.ghost.update();
-        //
-        for (const ruby of this.rubies){
-            ruby.update(delta);
-            if (this.collision(this.ghost, ruby)) this.pixi.stage.removeChild(ghost);
-        }
-        //Ghost collects diamonds
-        for (const diamond of this.diamonds){
-            diamond.update(delta);
-            if (this.collision(this.ghost, diamond)) this.pixi.stage.removeChild(diamond);
-        }
+    onClick() {
+        this.button.destroy();
+        this.titleText.destroy();
+        new _game.Game(this.pixi);
     }
 }
+new Startmenu();
 
-},{"pixi.js":"dsYej","./images/ghost.png":"6z1vT","./images/diamond.png":"f479L","./images/ruby.png":"e3w3P","./ghost":"hhp7d","./diamond":"doRq4","./ruby":"5Mz22","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./button":"hHDeU","./game":"edeGs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37088,8 +37046,140 @@ function __extends(d, b) {
     return AnimatedSprite1;
 }(_sprite.Sprite);
 
-},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6z1vT":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "ghost.6f3e3f03.png" + "?" + Date.now();
+},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hHDeU":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Button", ()=>Button
+);
+var _pixiJs = require("pixi.js");
+class Button extends _pixiJs.Graphics {
+    constructor(x, y){
+        super();
+        this.beginFill(65280);
+        this.drawRoundedRect(0, 0, 400, 100, 15);
+        this.endFill();
+        this.x = x - this.getBounds().width / 2;
+        this.y = y - this.getBounds().height / 2;
+        const startText = new _pixiJs.Text("Start Diamond Collector", {
+            "fontFamily": "Arial Black"
+        });
+        startText.x = this.getBounds().width / 2;
+        startText.y = this.getBounds().height / 2;
+        startText.anchor.set(0.5);
+        this.addChild(startText);
+        this.buttonMode = true;
+        this.interactive = true;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"edeGs":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Game", ()=>Game
+);
+var _pixiJs = require("pixi.js");
+var _ghostPng = require("./images/ghost.png");
+var _ghostPngDefault = parcelHelpers.interopDefault(_ghostPng);
+var _diamondPng = require("./images/diamond.png");
+var _diamondPngDefault = parcelHelpers.interopDefault(_diamondPng);
+var _rubyPng = require("./images/ruby.png");
+var _rubyPngDefault = parcelHelpers.interopDefault(_rubyPng);
+var _demonPng = require("./images/demon.png");
+var _demonPngDefault = parcelHelpers.interopDefault(_demonPng);
+var _ghost = require("./ghost");
+var _diamond = require("./diamond");
+var _ruby = require("./ruby");
+var _score = require("./score");
+class Game {
+    score = false;
+    counter = 0;
+    diamonds = [];
+    rubies = [];
+    get pixi() {
+        return this._pixi;
+    }
+    constructor(pixi){
+        console.log("game created");
+        this._pixi = pixi;
+        //Object
+        this.loader = new _pixiJs.Loader();
+        this.loader.add('ghostTexture', _ghostPngDefault.default).add('diamondTexture', _diamondPngDefault.default).add('rubyTexture', _rubyPngDefault.default).add('demonTexture', _demonPngDefault.default);
+        this.loader.load(()=>this.doneLoading()
+        );
+    }
+    //BEHAVOUR 
+    //Done loading the canvas it loads the textures and classes.
+    doneLoading() {
+        console.log("all textures loaded!");
+        //add score
+        new _score.ScoreTally;
+        console.log(this.scoreTally);
+        //add Ghost
+        this.ghost = new _ghost.Ghost(this.loader.resources["ghostTexture"].texture, this);
+        this.pixi.stage.addChild(this.ghost);
+        //add diamonds
+        for(let i = 0; i < 35; i++){
+            let diamond = new _diamond.Diamond(this.loader.resources['diamondTexture'].texture, this);
+            this.diamonds.push(diamond);
+            this.pixi.stage.addChild(diamond);
+        }
+        //add rubies
+        for(let i1 = 0; i1 < 8; i1++){
+            let ruby = new _ruby.Ruby(this.loader.resources['rubyTexture'].texture, this);
+            if (Math.random() < 0.3) ruby = new _ruby.Ruby(this.loader.resources['rubyTexture'].texture, this);
+            else if (Math.random() < 0.3) ruby = new _ruby.Ruby(this.loader.resources['demonTexture'].texture, this);
+            this.rubies.push(ruby);
+            this.pixi.stage.addChild(ruby);
+        }
+        this.pixi.ticker.add((delta)=>this.update(delta)
+        );
+    }
+    //collision: If the ruby hits the ghost, the player dies.
+    collision(diamonds, ghost) {
+        const bounds1 = diamonds.getBounds();
+        const bounds2 = ghost.getBounds();
+        // this.score++
+        // console.log(this.score)
+        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
+    }
+    collision1(rubies, ghost) {
+        const bounds1 = rubies.getBounds();
+        const bounds2 = ghost.getBounds();
+        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
+    }
+    //updates the classes
+    update(delta) {
+        this.ghost.update();
+        //Game still works despite the errors
+        for (const ruby of this.rubies){
+            ruby.update(delta);
+            if (this.collision1(this.ghost, ruby)) this.pixi.stage.removeChild(ghost);
+        }
+        //Ghost collects diamonds + scoreboard
+        for (const diamond of this.diamonds){
+            diamond.update(delta);
+            if (this.collision(this.ghost, diamond) && this.score == false) {
+                this.pixi.stage.removeChild(diamond);
+                //Check console log for counting the scores of collecting green diamonds.
+                console.log(this.score++);
+            //TO-DO: Showing scoreboard on in the game.
+            }
+        }
+        //scoreboard: able to see scoreboard in console log.
+        switch(this.score == true){
+            case this.counter > 100:
+                this.counter = 0;
+                this.score = false;
+                break;
+            case this.score == true && this.counter < 100:
+                this.counter += delta;
+                break;
+        }
+    }
+}
+
+},{"pixi.js":"dsYej","./images/ghost.png":"lle7c","./images/diamond.png":"hJQgO","./images/ruby.png":"6wJ99","./ghost":"hhp7d","./diamond":"doRq4","./ruby":"5Mz22","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./score":"fE8P1","./images/demon.png":"3mfX1"}],"lle7c":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "ghost.6f3e3f03.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
 "use strict";
@@ -37125,11 +37215,11 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"f479L":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "diamond.7544d873.png" + "?" + Date.now();
+},{}],"hJQgO":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "diamond.7544d873.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"e3w3P":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "ruby.9f74216d.png" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"6wJ99":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "ruby.9f74216d.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"hhp7d":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -37257,6 +37347,27 @@ class Ruby extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fE8P1":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+//CONCEPT
+parcelHelpers.export(exports, "ScoreTally", ()=>ScoreTally
+);
+var _pixiJs = require("pixi.js");
+class ScoreTally extends _pixiJs.Graphics {
+    constructor(){
+        super();
+        const scoreText = new _pixiJs.Text("Score: 0");
+        scoreText.style = new _pixiJs.TextStyle({
+            fill: 16777215
+        });
+        this.addChild(scoreText);
+    }
+}
 
-//# sourceMappingURL=index.901f85c2.js.map
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3mfX1":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('8xX2B') + "demon.f90cc6b4.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}]},["cGvIw","cS4Fe"], "cS4Fe", "parcelRequirea0e5")
+
+//# sourceMappingURL=index.1b34d9e1.js.map

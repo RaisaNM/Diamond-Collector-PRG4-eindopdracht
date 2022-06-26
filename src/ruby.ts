@@ -3,8 +3,8 @@ import {Game} from './game'
 
 //Ruby's has to damage the player
 export class Ruby extends PIXI.Sprite {
-    speed: number = 0
-    game: Game
+    private speed: number = 0
+    public game: Game
 
     //OBJECT
     constructor(texture: PIXI.Texture, game: Game){
@@ -17,9 +17,9 @@ export class Ruby extends PIXI.Sprite {
     }
     
     //Behaviour
-    update(delta: number) {
+    public update(delta: number) {
         this.x += this.speed*delta
-        this.x += Math.sin(this.y * 0.02) * 5
-        this.y += Math.sin(this.x * 0.02) * 8
+        this.x += Math.sin(this.y * 0.02) * 3
+        this.y += Math.sin(this.x * 0.02) * 2
     }
 }

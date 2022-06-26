@@ -2,24 +2,39 @@ import * as PIXI from 'pixi.js'
 import ghostImage from "./images/ghost.png"
 import diamondImage from "./images/diamond.png"
 import rubyImage from "./images/ruby.png"
+import demonImage from "./images/demon.png"
 
 import {Ghost} from './ghost'
 import {Diamond} from './diamond'
 import {Ruby} from './ruby'
+import {ScoreTally} from './score'
 
 export class Game {
     //Making a pixi-canvas
-    pixi: PIXI.Application
-    diamonds: Diamond[] = [];
-    rubies: Ruby[] = [];
-    ghost: Ghost[] = [];
-    background: PIXI.Sprite
-    loader
+    private _pixi: PIXI.Application
+    public background: PIXI.Sprite
 
-    constructor(){
+    private loader
+    
+    public score: boolean = false
+    private counter: number = 0
+    public scoreCounter: 0
+    public scoreTally: ScoreTally
+
+    public diamonds: Diamond[] = [];
+
+    public rubies: Ruby[] = [];
+    public ghost: Ghost
+   
+
+    public get pixi(): PIXI.Application {
+        return this._pixi
+      }
+
+      constructor(pixi: PIXI.Application){
         console.log("game created")
-        this.pixi = new PIXI.Application({ width: 800, height: 450 })
-        document.body.appendChild(this.pixi.view)
+        
+        this._pixi = pixi
 
         //Object
         this.loader = new PIXI.Loader()
@@ -27,24 +42,25 @@ export class Game {
             .add('ghostTexture', ghostImage)
             .add('diamondTexture', diamondImage)
             .add('rubyTexture', rubyImage)
+            .add('demonTexture', demonImage)
+
 
         this.loader.load(() => this.doneLoading())
     }
 
-    
     //BEHAVOUR 
 
     //Done loading the canvas it loads the textures and classes.
-    doneLoading(){
+   public doneLoading(){
         console.log("all textures loaded!")
+        //add score
+        new ScoreTally
+        console.log(this.scoreTally)
 
         //add Ghost
-        for(let i = 0; i<1; i++){
-            let ghost = new Ghost(this.loader.resources['ghostTexture'].texture!, this)
-            this.ghost.push(ghost)
-            this.pixi.stage.addChild(ghost)
-        }
-
+        this.ghost = new Ghost(  this.loader.resources["ghostTexture"].texture!, this);
+        this.pixi.stage.addChild(this.ghost);
+        
         //add diamonds
         for(let i = 0; i<35; i++){
             let diamond = new Diamond(this.loader.resources['diamondTexture'].texture!, this)
@@ -53,8 +69,15 @@ export class Game {
         }
 
         //add rubies
-        for(let i = 0; i<20; i++){
+        for(let i = 0; i<8; i++){
             let ruby = new Ruby(this.loader.resources['rubyTexture'].texture!, this)
+           
+            if (Math.random() < 0.3){
+                ruby = new Ruby(this.loader.resources['rubyTexture'].texture!, this)
+            }
+            else if (Math.random() < 0.3){
+                ruby = new Ruby(this.loader.resources['demonTexture'].texture!, this)
+            }
             this.rubies.push(ruby)
             this.pixi.stage.addChild(ruby)
         }
@@ -63,7 +86,19 @@ export class Game {
     }
 
     //collision: If the ruby hits the ghost, the player dies.
-    collision(rubies:Ruby, ghost: Ghost) {
+    private collision(diamonds: Diamond, ghost: Ghost) {
+        const bounds1 = diamonds.getBounds()
+        const bounds2 = ghost.getBounds()
+        // this.score++
+        // console.log(this.score)
+
+        return bounds1.x < bounds2.x + bounds2.width
+            && bounds1.x + bounds1.width > bounds2.x
+            && bounds1.y < bounds2.y + bounds2.height
+            && bounds1.y + bounds1.height > bounds2.y;
+    }
+    
+    private collision1(rubies: Ruby, ghost: Ghost) {
         const bounds1 = rubies.getBounds()
         const bounds2 = ghost.getBounds()
 
@@ -71,28 +106,46 @@ export class Game {
             && bounds1.x + bounds1.width > bounds2.x
             && bounds1.y < bounds2.y + bounds2.height
             && bounds1.y + bounds1.height > bounds2.y;
+
     }
 
     //updates the classes
-    update(delta: number){
-        for(const diamond of this.diamonds){
-            diamond.update(delta)
-        }
-
+    public update(delta: number){
+        this.ghost.update();
+        //Game still works despite the errors
         for(const ruby of this.rubies){
             ruby.update(delta)
+            if (this.collision1(this.ghost, ruby)) {
+                this.pixi.stage.removeChild(ghost);
+             
+              }
         }
 
-        for(const ghost of this.ghost){
-            ghost.update()
+        //Ghost collects diamonds + scoreboard
+        for(const diamond of this.diamonds){
+            diamond.update(delta)
+            if (this.collision(this.ghost, diamond)&& this.score == false) {
+                this.pixi.stage.removeChild(diamond);
+                //Check console log for counting the scores of collecting green diamonds.
+                 console.log(this.score++)
+                 //TO-DO: Showing scoreboard on in the game.
+    
+              }
         }
 
-        //Collision with rubies and ghost but doesnt work. 
-        //
+        //scoreboard: able to see scoreboard in console log.
+        switch(this.score == true){
+            case this.counter>100:
+                this.counter = 0
+                this.score = false
+            break
+            case this.score == true && this.counter <100:
+                this.counter += delta
+            break
 
-        // if(this.collision(this.diamond, this.ghost)){
-        //     console.log("player touches enemy 💀")
-        // }
+        }
     }
 }
-new Game()
+
+
+

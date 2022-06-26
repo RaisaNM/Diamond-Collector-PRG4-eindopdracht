@@ -2,10 +2,10 @@ import * as PIXI from 'pixi.js'
 import {Game} from './game'
 
 export class Diamond extends PIXI.Sprite {
-    speed: number = 0
-    game: Game
+    private speed: number = 0
+    public game: Game
 
-    //OBJECT
+    //OBJECT    
     constructor(texture: PIXI.Texture, game: Game){
         super(texture)
         this.game = game
@@ -16,7 +16,7 @@ export class Diamond extends PIXI.Sprite {
     }
     
     //Behaviour: updates the movement of the diamonds
-    update(delta: number) {
+    public update(delta: number) {
         this.x += this.speed*delta
         this.x += Math.sin(this.y * 0.02) * 2
         this.y += Math.sin(this.x * 0.02) * 2

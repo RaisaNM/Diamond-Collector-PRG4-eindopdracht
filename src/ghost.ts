@@ -4,15 +4,15 @@ import {Game} from './game'
 //Ghost class, the player
 export class Ghost extends PIXI.Sprite {
     //Speed
-    speed: number = 0
-    xspeed = 0
-    yspeed = 0
-
+    private speed: number = 0
+    private xspeed = 0
+    private yspeed = 0
+    
     //Game
     game: Game
 
     //Object
-    constructor(texture: PIXI.Texture, game: Game){
+    constructor(texture: PIXI.Texture, game: Game,){
         super(texture)
         this.game = game
         
